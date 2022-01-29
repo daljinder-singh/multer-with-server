@@ -1,0 +1,33 @@
+const fs = require('fs');
+const mongoSchema = require('../Modals/info')
+const Upload = async (req, res, next) =>{
+        try{
+ var img = fs.readFileSync(req.file.path);
+    var encode_img = img.toString('base64');
+     const newItem = new mongoSchema();
+                newItem.avatar.data = Buffer.from(encode_img,'base64');
+                newItem.avatar.contentType = req.file.mimetype;
+                newItem.size = req.file.size;
+
+                await newItem.save();
+        res.send(newItem).end();
+        } catch (err){
+                console.log(err)
+        }
+}
+
+const GetImage = async (req,res,next) => {
+       const img =await mongoSchema.aggregate([
+  {
+    '$project': {
+      'avatar.data': 1, 
+      '_id': 1,
+      'avatar.contentType': 1,
+    }
+  }, {
+    '$limit': 1
+  }
+])
+ res.send(img);
+}
+module.exports ={ Upload, GetImage };
