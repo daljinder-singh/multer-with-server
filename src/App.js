@@ -1,48 +1,45 @@
-import React,{useEffect, useState} from 'react';
-import Axios from 'axios';
-import './App.css';
+// eslint-disable-next-line no-unused-vars
+import React,{useEffect, useState} from "react";
+import Axios from "axios";
+import "./App.css";
 
 const App = () =>{
     
-    const [img, setImg] = useState('');
-    const [text, setText] = useState('');
+    const [img, setImg] = useState("");
+    const [text, setText] = useState("");
     const [getImg, setGetImg] = useState();
 
     const imgHandle = (e) =>{
-      setImg(e.target.files[0])
-    }
+      setImg(e.target.files[0]);
+    };
 
     const inpHandle = (e) =>{
-      setText(e.target.value)
-    }
+      setText(e.target.value);
+    };
 
-    const submit = async (e) =>{
-      e.preventDefault();
-      
+    const submit = async () =>{      
+      // eslint-disable-next-line no-undef
       let formData = new FormData();
-      formData.append('Image', img)
-      formData.append('Name', text)
+      formData.append("Image", img);
+      formData.append("Name", text);
 
-        let url = 'http://localhost:4000/sent';
+      const url = "http://localhost:4000/sent";
         try{
-           let a = await Axios.post(url, formData);
-           console.log(formData)
+           await Axios.post(url, formData);
         }catch(err){
-          console.log(err);
-        };
-        setText('');
-        setImg('');
+          // console.log(err);
+        }
+        setText("");
+        setImg("");
     };
     const getImage = async () => {
-      let url = 'http://localhost:4000/get'
+      const url = "http://localhost:4000/get";
       let a = await Axios.get(url);
-    console.log(a?.data[0]?.avatar)
-
-      setGetImg(a?.data[0]?.avatar)
-    }
+      setGetImg(a?.data[0]?.avatar);
+    };
     useEffect(() => {
-      getImage()
-    },[])
+      getImage();
+    },[]);
   return(
     <div className = 'App'>
       <form >
@@ -55,7 +52,7 @@ const App = () =>{
       </form>
       <img src={`data:${getImg?.contentType};base64,${getImg?.data}`} />
     </div>
-  )
+  );
 };
 export default App;
 
